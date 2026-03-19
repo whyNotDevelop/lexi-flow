@@ -50,9 +50,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',  # required for ArrayField
     #third-party apps
     'rest_framework',
     'corsheaders',
+    'users',
+    'words',
+    'vocabulary',
+    'history',
+    'analytics',
 ]
 
 MIDDLEWARE = [
