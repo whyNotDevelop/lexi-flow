@@ -90,34 +90,18 @@ WSGI_APPLICATION = 'lexiflow_backend.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 # Use DATABASE_URL from environment; fallback to SQLite for local development
-#DATABASES = {
-#    'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3')
-#}
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3')
 }
-
 
 # Cache
-#CACHES = {
-#    'default': {
-#        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-#        'LOCATION': f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/1",
-#    }
-#}
-
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/1",
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
