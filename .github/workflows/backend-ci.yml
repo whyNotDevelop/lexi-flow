@@ -1,0 +1,83 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'lexiflow_backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'lexiflow_backend/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: lexiflow_test
+          POSTGRES_USER: lexiflow_user
+          POSTGRES_PASSWORD: lexiflow_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        working-directory: lexiflow_backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Django tests
+        working-directory: lexiflow_backend
+        env:
+          DJANGO_SECRET_KEY: test-key-not-secure
+          DJANGO_DEBUG: True
+          DATABASE_URL: postgresql://lexiflow_user:lexiflow_password@localhost:5432/lexiflow_test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+        run: |
+          python manage.py test
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: lexiflow_backend
+          push: false
+          tags: lexiflow-backend:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
