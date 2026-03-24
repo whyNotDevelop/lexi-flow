@@ -2,7 +2,11 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class User(AbstractUser):
+class UserModel(AbstractUser):
+    """
+    Custom user model that extends Django's AbstractUser.
+    Uses email as the unique identifier instead of username.
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255, blank=True)
@@ -11,15 +15,18 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']  # username is still needed by AbstractUser
+    REQUIRED_FIELDS = ['username']  # Django still requires a username field
 
     def __str__(self):
         return self.email
 
 
-class UserPreferences(models.Model):
+class UserPreferencesModel(models.Model):
+    """
+    User preferences model, linked one‑to‑one to the user.
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='preferences')
+    user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='preferences')
     is_dark_mode = models.BooleanField(default=False)
     language = models.CharField(max_length=10, default='en')
     notifications_enabled = models.BooleanField(default=True)

@@ -24,8 +24,8 @@ class WordRepositoryImpl(WordRepository):
 
     def _cache_key(self, text: str, language: str = "en") -> str:
         """Generate Redis cache key."""
-        normalized = self._normalize_word(text)
-        return f"{self.CACHE_KEY_PREFIX}{language}:{normalized}"
+        normalized_text = self._normalize_word(text)
+        return f"{self.CACHE_KEY_PREFIX}{language}:{normalized_text}"
 
     def _to_entity(self, model: WordModel) -> Word:
         """Convert Django model to domain entity."""
@@ -34,7 +34,7 @@ class WordRepositoryImpl(WordRepository):
                 id=def_model.id,
                 meaning=def_model.meaning,
                 part_of_speech=def_model.part_of_speech,
-                example=def_model.example,
+                example=def_model.example,   
                 synonyms=def_model.synonyms,
                 order=def_model.order,
             )
