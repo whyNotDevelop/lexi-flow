@@ -1,10 +1,10 @@
 import uuid
 from django.db import models
-from users.infrastructure.models import User
+from users.infrastructure.models import UserModel
 
-class ReadingSession(models.Model):
+class ReadingSessionModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reading_sessions')
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='reading_sessions')
     book_id = models.CharField(max_length=255, blank=True)
     book_title = models.CharField(max_length=500, blank=True)
     started_at = models.DateTimeField(auto_now_add=True)

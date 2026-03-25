@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
-class Word(models.Model):
+class WordModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.CharField(max_length=255, db_index=True)
     language = models.CharField(max_length=10, default='en')
@@ -17,9 +17,9 @@ class Word(models.Model):
         return self.text
 
 
-class Definition(models.Model):
+class DefinitionModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    word = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='definitions')
+    word = models.ForeignKey(WordModel, on_delete=models.CASCADE, related_name='definitions')
     part_of_speech = models.CharField(max_length=50)
     meaning = models.TextField()
     example = models.TextField(blank=True)
