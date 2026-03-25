@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .infrastructure.models import LookupHistory
+from .infrastructure.models import LookupHistoryModel
 
-@admin.register(LookupHistory)
+@admin.register(LookupHistoryModel)
 class LookupHistoryAdmin(admin.ModelAdmin):
     list_display = ('user', 'word', 'looked_up_at')
     list_filter = ('looked_up_at',)

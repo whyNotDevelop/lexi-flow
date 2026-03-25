@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .infrastructure.models import ReadingSession
+from .infrastructure.models import ReadingSessionModel
 
-@admin.register(ReadingSession)
+@admin.register(ReadingSessionModel)
 class ReadingSessionAdmin(admin.ModelAdmin):
     list_display = ('user', 'book_title', 'started_at', 'duration_seconds', 'words_looked_up')
     list_filter = ('started_at',)

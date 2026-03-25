@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .infrastructure.models import User, UserPreferences
+from .infrastructure.models import UserModel, UserPreferencesModel
 
-@admin.register(User)
+@admin.register(UserModel)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'full_name', 'is_active', 'created_at')
     list_filter = ('is_active', 'is_staff', 'created_at')
@@ -15,7 +15,7 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ('email',)
 
 
-@admin.register(UserPreferences)
+@admin.register(UserPreferencesModel)
 class UserPreferencesAdmin(admin.ModelAdmin):
     list_display = ('user', 'language', 'is_dark_mode', 'notifications_enabled')
     list_filter = ('language', 'is_dark_mode', 'notifications_enabled')

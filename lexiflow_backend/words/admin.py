@@ -1,13 +1,13 @@
 from django.contrib import admin
-from .infrastructure.models import Word, Definition
+from .infrastructure.models import WordModel, DefinitionModel
 
 class DefinitionInline(admin.TabularInline):
-    model = Definition
+    model = DefinitionModel
     extra = 0
     fields = ('part_of_speech', 'meaning', 'example', 'order')
     ordering = ('order',)
 
-@admin.register(Word)
+@admin.register(WordModel)
 class WordAdmin(admin.ModelAdmin):
     list_display = ('text', 'language', 'phonetic', 'created_at')
     list_filter = ('language', 'created_at')
@@ -16,7 +16,7 @@ class WordAdmin(admin.ModelAdmin):
     inlines = [DefinitionInline]
 
 
-@admin.register(Definition)
+@admin.register(DefinitionModel)
 class DefinitionAdmin(admin.ModelAdmin):
     list_display = ('word', 'part_of_speech', 'meaning_preview', 'order')
     list_filter = ('part_of_speech',)

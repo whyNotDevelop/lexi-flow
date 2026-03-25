@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .infrastructure.models import VocabularyEntry
+from .infrastructure.models import VocabularyEntryModel
 
-@admin.register(VocabularyEntry)
+@admin.register(VocabularyEntryModel)
 class VocabularyEntryAdmin(admin.ModelAdmin):
     list_display = ('user', 'word', 'saved_at', 'review_count')
     list_filter = ('saved_at', 'review_count')
