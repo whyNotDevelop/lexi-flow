@@ -23,6 +23,11 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
+    def get_django_user_by_id(self, user_id: UUID):
+        """Retrieve the Django user model by ID (for authentication/JWT)."""
+        pass
+
+    @abstractmethod
     def create(self, email: str, password: str, full_name: Optional[str] = None) -> User:
         """
         Create a new user with the given credentials.

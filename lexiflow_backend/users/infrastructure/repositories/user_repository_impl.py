@@ -38,6 +38,13 @@ class UserRepositoryImpl(UserRepository):
         except UserModel.DoesNotExist:
             return None
 
+    def get_django_user_by_id(self, user_id: UUID):
+        """Get the Django user model instance for JWT token generation."""
+        try:
+            return UserModel.objects.get(id=user_id)
+        except UserModel.DoesNotExist:
+            return None
+
     def create(self, email: str, password: str, full_name: Optional[str] = None) -> User:
         """
         Create a new user. The password is hashed using Django's make_password.
