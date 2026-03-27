@@ -1,0 +1,6 @@
+"""
+Application services for user management.
+"""
+from .auth_service import AuthService
+
+__all__ = ["AuthService"]
