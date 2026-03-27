@@ -46,3 +46,11 @@ class HistoryRepositoryImpl(HistoryRepository):
         """Delete all history for a user; return number deleted."""
         count, _ = LookupHistoryModel.objects.filter(user_id=user_id).delete()
         return count
+
+    def count_by_user(self, user_id: UUID) -> int:
+        """Count total lookup history entries for a user."""
+        return LookupHistoryModel.objects.filter(user_id=user_id).count()
+
+    def count_by_user_since(self, user_id: UUID, since: datetime) -> int:
+        """Count lookup history entries for a user since the provided time."""
+        return LookupHistoryModel.objects.filter(user_id=user_id, looked_up_at__gte=since).count()

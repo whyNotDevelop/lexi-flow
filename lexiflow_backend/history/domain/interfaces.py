@@ -36,3 +36,13 @@ class HistoryRepository(ABC):
         Returns the number of deleted entries.
         """
         pass
+
+    @abstractmethod
+    def count_by_user(self, user_id: UUID) -> int:
+        """Count total lookup history entries for a user."""
+        pass
+
+    @abstractmethod
+    def count_by_user_since(self, user_id: UUID, since: datetime) -> int:
+        """Count lookup history entries for a user since the provided time."""
+        pass

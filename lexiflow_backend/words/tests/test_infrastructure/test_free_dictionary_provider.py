@@ -2,6 +2,8 @@
 Unit tests for FreeDictionaryProvider.
 """
 import pytest
+import logging
+import requests
 from unittest.mock import Mock, patch, MagicMock
 from datetime import datetime
 
@@ -141,10 +143,10 @@ class TestFreeDictionaryProvider:
         """Test: HTTP error returns None."""
         mock_response = Mock()
         mock_response.status_code = 500
-        mock_response.raise_for_status.side_effect = Exception("Server error")
+        mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError("Server error")
         mock_get.return_value = mock_response
 
-        with patch("builtins.print"):  # Suppress error output
+        with patch("words.infrastructure.providers.free_dictionary_provider.logger"):
             result = self.provider.fetch_word("hello")
 
         assert result is None
@@ -157,7 +159,7 @@ class TestFreeDictionaryProvider:
         mock_response.json.side_effect = ValueError("Invalid JSON")
         mock_get.return_value = mock_response
 
-        with patch("builtins.print"):
+        with patch("words.infrastructure.providers.free_dictionary_provider.logger"):
             result = self.provider.fetch_word("hello")
 
         assert result is None

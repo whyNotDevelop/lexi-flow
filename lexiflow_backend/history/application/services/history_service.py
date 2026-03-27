@@ -106,7 +106,7 @@ class HistoryService:
         """
         return self.history_repo.count_by_user(user_id)
 
-    def get_looklup_count_since(self, user_id: UUID, since: datetime) -> int:
+    def get_lookup_count_since(self, user_id: UUID, since: datetime) -> int:
         """
         Get number of lookups for a user since a specific time.
 

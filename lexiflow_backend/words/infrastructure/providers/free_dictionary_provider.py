@@ -9,6 +9,7 @@ clean architecture boundaries. Services depend on the interface, not this
 concrete implementation.
 """
 
+import logging
 import requests
 from datetime import datetime
 from typing import Optional, List, Dict, Any
@@ -16,6 +17,8 @@ from uuid import UUID
 
 from words.domain.entities import Word, Definition
 from words.domain.interfaces import DictionaryProvider
+
+logger = logging.getLogger(__name__)
 
 
 class FreeDictionaryProvider(DictionaryProvider):
@@ -77,12 +80,11 @@ class FreeDictionaryProvider(DictionaryProvider):
 
         except requests.exceptions.RequestException as e:
             # Network error, timeout, or invalid response
-            # Log the error in a real system
-            print(f"Failed to fetch word from API: {e}")
+            logger.error(f"Failed to fetch word from API: {e}")
             return None
         except (KeyError, ValueError, TypeError) as e:
             # Parsing error
-            print(f"Failed to parse API response: {e}")
+            logger.error(f"Failed to parse API response: {e}")
             return None
 
     def _map_to_word(self, api_data: Dict[str, Any], word: str, language: str) -> Word:

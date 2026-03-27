@@ -165,7 +165,7 @@ class TestHistoryService:
         since = datetime.now() - timedelta(days=7)
         self.history_repo.count_by_user_since.return_value = 15
 
-        result = self.service.get_looklup_count_since(self.user_id, since)
+        result = self.service.get_lookup_count_since(self.user_id, since)
 
         assert result == 15
         self.history_repo.count_by_user_since.assert_called_once_with(
@@ -177,6 +177,6 @@ class TestHistoryService:
         since = datetime.now() + timedelta(days=1)
         self.history_repo.count_by_user_since.return_value = 0
 
-        result = self.service.get_looklup_count_since(self.user_id, since)
+        result = self.service.get_lookup_count_since(self.user_id, since)
 
         assert result == 0
