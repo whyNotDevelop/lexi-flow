@@ -33,16 +33,22 @@ def mock_dictionary_response():
                 {
                     "word": word,
                     "phonetic": f"/{word}/",
+                    "phonetics": [
+                        {
+                            "text": f"/{word}/",
+                            "audio": f"https://api.dictionaryapi.dev/media/pronunciations/en/{word}-us.mp3"
+                        }
+                    ],
                     "meanings": [
                         {
                             "partOfSpeech": "noun",
                             "definitions": [
                                 {
                                     "definition": f"Definition of {word}",
-                                    "example": f"Example sentence with {word}"
+                                    "example": f"Example sentence with {word}",
+                                    "synonyms": ["similar", "alike"]
                                 }
-                            ],
-                            "synonyms": ["similar", "alike"]
+                            ]
                         }
                     ]
                 }
