@@ -1,3 +1,4 @@
+import json
 import pytest
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -27,6 +28,7 @@ def mock_dictionary_response():
         response = MagicMock()
         response.status_code = status_code
         if status_code == 200:
+            response.raise_for_status = MagicMock()  # no-op
             response.json.return_value = [
                 {
                     "word": word,
@@ -46,8 +48,7 @@ def mock_dictionary_response():
                 }
             ]
         else:
-            # Simulate a non‑200 response
-            response.json.side_effect = Exception("Not found")
-            response.raise_for_status.side_effect = Exception("Error")
+            response.raise_for_status.side_effect = Exception(f"HTTP {status_code}")
+            response.json.side_effect = json.JSONDecodeError("msg", "doc", 0)
         return response
     return _make_response
