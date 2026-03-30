@@ -49,6 +49,14 @@ class WordRepositoryImpl(WordRepository):
             created_at=model.created_at,
             definitions=definitions,
         )
+    
+    def get_by_id(self, word_id: UUID) -> Optional[Word]:
+        """Retrieve a word by its ID from DB."""
+        try:
+            model = WordModel.objects.get(id=word_id)
+            return self._to_entity(model)
+        except WordModel.DoesNotExist:
+            return None
 
     def find_by_text(self, text: str, language: str = "en") -> Optional[Word]:
         # 1. Try Redis cache
