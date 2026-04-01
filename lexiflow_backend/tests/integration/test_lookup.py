@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import patch
 from rest_framework import status
+from django.core.cache import cache
 
 from words.infrastructure.models import WordModel
 from history.infrastructure.models import LookupHistoryModel
@@ -32,3 +33,29 @@ class TestLookupFlow:
 
             # Verify history recorded
             assert LookupHistoryModel.objects.filter(user=user, word=word).exists()
+
+    def test_second_lookup_uses_cache(self, authenticated_api_client, mock_dictionary_response):
+            """
+            Test that second lookup uses cache and doesn't call external API.
+            """
+            client, user = authenticated_api_client
+
+            with patch('words.infrastructure.providers.free_dictionary_provider.requests.get') as mock_get:
+                mock_get.return_value = mock_dictionary_response('ephemeral')
+
+                # First lookup
+                response1 = client.get('/api/words/lookup/ephemeral/')
+                assert response1.status_code == status.HTTP_200_OK
+                call_count_after_first = mock_get.call_count
+
+                # Second lookup
+                response2 = client.get('/api/words/lookup/ephemeral/')
+                assert response2.status_code == status.HTTP_200_OK
+
+                # Verify API was not called again
+                assert mock_get.call_count == call_count_after_first
+
+                # Verify cache is populated
+                cache_key = f"lexiflow:word:en:ephemeral"
+                cached = cache.get(cache_key)
+                assert cached is not None
