@@ -59,3 +59,24 @@ class TestLookupFlow:
                 cache_key = f"lexiflow:word:en:ephemeral"
                 cached = cache.get(cache_key)
                 assert cached is not None
+
+    def test_word_not_found_returns_404(self, authenticated_api_client, mock_dictionary_response):
+        """
+        Test that a word not found in external API returns 404.
+        """
+        client, user = authenticated_api_client
+
+        with patch('words.infrastructure.providers.free_dictionary_provider.requests.get') as mock_get:
+            # Mock a 404 response (the fixture will simulate a 404 error)
+            mock_get.return_value = mock_dictionary_response('nonexistent', status_code=404)
+
+            response = client.get('/api/words/lookup/nonexistent/')
+            assert response.status_code == status.HTTP_404_NOT_FOUND
+            assert 'not found' in response.data.get('error', '').lower()
+
+@pytest.fixture(autouse=True)
+def clear_cache():
+    """Clear Redis cache before each test to ensure isolation."""
+    from django.core.cache import cache
+    cache.clear()
+    yield
