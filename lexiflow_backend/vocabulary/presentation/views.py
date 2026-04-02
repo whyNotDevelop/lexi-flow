@@ -56,21 +56,29 @@ class VocabularyViewSet(viewsets.ViewSet):
 
         try:
             word_uuid = UUID(word_id)
-            vocab_entry = self.vocab_service.save_word(user_id, word_uuid)
-
-            serializer = VocabularyEntrySerializer(vocab_entry)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        except ValueError as e:
+        except ValueError:
             return Response(
-                {"error": f"Invalid word ID: {str(e)}"},
+                {"error": f"Invalid word ID format: {word_id}"},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+        try:
+            vocab_entry = self.vocab_service.save_word(user_id, word_uuid)
         except Exception as e:
             return Response(
                 {"error": f"Failed to save word: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+        # If the service returns None, it means the word was already saved
+        if vocab_entry is None:
+            return Response(
+                {"error": "Word already in vocabulary"},
+                status=status.HTTP_409_CONFLICT
+            )
+
+        serializer = VocabularyEntrySerializer(vocab_entry)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         summary="Remove word from vocabulary",
@@ -143,10 +151,10 @@ class VocabularyViewSet(viewsets.ViewSet):
         """
         user_id = request.user.id
         query = request.query_params.get('q', '')
-        limit = int(request.query_params.get('limit', 50))
+        #limit = int(request.query_params.get('limit', 50))
 
         try:
-            vocab_entries = self.vocab_service.search_vocabulary(user_id, query, limit)
+            vocab_entries = self.vocab_service.search_vocabulary(user_id, query)
             serializer = VocabularyEntrySerializer(vocab_entries, many=True)
             return Response(serializer.data)
 
@@ -169,10 +177,10 @@ class VocabularyViewSet(viewsets.ViewSet):
         GET /api/vocabulary/list/?limit=100
         """
         user_id = request.user.id
-        limit = int(request.query_params.get('limit', 1000))
+        #limit = int(request.query_params.get('limit', 1000))
 
         try:
-            vocab_entries = self.vocab_service.get_user_vocabulary(user_id, limit)
+            vocab_entries = self.vocab_service.get_user_vocabulary(user_id)
             serializer = VocabularyEntrySerializer(vocab_entries, many=True)
             return Response(serializer.data)
 

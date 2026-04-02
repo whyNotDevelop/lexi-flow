@@ -59,11 +59,11 @@ class VocabularyService:
         Returns:
             The saved VocabularyEntry if successful, None if word not found.
         """
-        # Step 1: Check if word is already saved
+         # Step 1: Check if already saved
         existing = self.vocab_repo.find_by_user_and_word(user_id, word_id)
         if existing:
-            # Word already saved; return existing entry
-            return existing
+            # Return None (or raise exception) to indicate duplicate
+            return None
 
         # Step 2: Retrieve the word to get its definition
         word = self.word_repo.get_by_id(word_id)
