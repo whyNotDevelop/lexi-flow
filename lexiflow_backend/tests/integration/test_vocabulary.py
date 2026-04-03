@@ -108,7 +108,7 @@ class TestVocabularyFlow:
         response = client.get('/api/vocabulary/search/?q=se')
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 2
-        texts = [item['word'] for item in response.data]
+        texts = [item['word_text'] for item in response.data]
         assert 'serendipity' in texts
         assert 'sentient' in texts
         assert 'ephemeral' not in texts

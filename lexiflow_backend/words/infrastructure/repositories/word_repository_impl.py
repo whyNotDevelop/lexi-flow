@@ -154,3 +154,7 @@ class WordRepositoryImpl(WordRepository):
             )
             for def_model in definitions
         ]
+    
+    def get_by_ids(self, ids: List[UUID]) -> List[Word]:
+        models = WordModel.objects.filter(id__in=ids)
+        return [self._to_entity(model) for model in models]

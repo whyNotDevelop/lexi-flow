@@ -41,6 +41,10 @@ class WordRepository(ABC):
     def get_definitions(self, word_id: UUID) -> List[Definition]:
         """Retrieve all definitions for a given word."""
         pass
+    @abstractmethod
+    def get_by_ids(self, ids: List[UUID]) -> List[Word]:
+        """Retrieve multiple words by their IDs efficiently."""
+        pass
 
 class DictionaryProvider(ABC):
     """
