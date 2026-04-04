@@ -3,7 +3,7 @@ Production settings for LexiFlow backend.
 These settings assume HTTPS termination is handled by a reverse proxy.
 """
 
-from .settings import *
+from .base import *
 
 DEBUG = False
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
