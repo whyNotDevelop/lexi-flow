@@ -11,7 +11,7 @@ concrete implementation.
 
 import logging
 import requests
-from datetime import datetime
+from django.utils import timezone
 from typing import Optional, List, Dict, Any
 from uuid import UUID
 
@@ -116,7 +116,7 @@ class FreeDictionaryProvider(DictionaryProvider):
             language=language,
             phonetic=phonetic,
             audio_url=audio_url,
-            created_at=datetime.now(),
+            created_at=timezone.now(),
             definitions=definitions,
         )
 

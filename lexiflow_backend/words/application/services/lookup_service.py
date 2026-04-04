@@ -16,6 +16,7 @@ This follows the Clean Architecture principle of separation of concerns:
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
+from django.utils import timezone 
 
 from words.domain.entities import Word
 from words.domain.interfaces import WordRepository, DictionaryProvider
@@ -111,7 +112,7 @@ class LookupService:
                 id=None,  # Let the repository assign the ID
                 user_id=user_id,
                 word_id=word_id,
-                looked_up_at=datetime.now(),
+                looked_up_at=timezone.now(),
             )
             self.history_repo.add(history)
         except Exception as e:

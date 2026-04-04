@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch
 from rest_framework import status
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 from words.infrastructure.models import WordModel
 from history.infrastructure.models import LookupHistoryModel
@@ -81,8 +82,10 @@ class TestHistoryFlow:
             mock_get.return_value = mock_dictionary_response('sinceword')
             client.get('/api/words/lookup/sinceword/')
             # Wait a moment to ensure timestamps differ? Not needed for mock, but we'll use a since date far in the past.
-            since = (datetime.now() - timedelta(hours=1)).isoformat()
+            since = (timezone.now() - timedelta(hours=1)).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
             response = client.get(f'/api/history/count-since/?since={since}')
+            print("Response status:", response.status_code)
+            print("Response data:", response.data)
             assert response.status_code == status.HTTP_200_OK
             assert response.data['count'] >= 1
 

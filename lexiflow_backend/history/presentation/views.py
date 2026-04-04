@@ -8,6 +8,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.utils.dateparse import parse_datetime
+from django.utils.timezone import is_aware, make_aware
 from drf_spectacular.utils import extend_schema
 
 from history.application.services.history_service import HistoryService
@@ -117,6 +119,7 @@ class HistoryViewSet(viewsets.ViewSet):
         description="Get number of lookups since a specific date.",
         responses={200: dict}
     )
+
     @action(detail=False, methods=['get'], url_path='count-since')
     def get_lookup_count_since(self, request):
         """
@@ -133,17 +136,21 @@ class HistoryViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        try:
-            from datetime import datetime
-            since = datetime.fromisoformat(since_str.replace('Z', '+00:00'))
-            count = self.history_service.get_lookup_count_since(user_id, since)
-            return Response({"count": count})
-
-        except ValueError as e:
+        # Use Django's parse_datetime (handles ISO 8601 with timezone)
+        since = parse_datetime(since_str)
+        if since is None:
             return Response(
-                {"error": f"Invalid date format: {str(e)}"},
+                {"error": "Invalid date format. Use ISO 8601 (e.g., 2024-01-01T00:00:00Z)."},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+        # Ensure the datetime is timezone-aware (Django's ORM expects aware for comparisons)
+        if not is_aware(since):
+            since = make_aware(since)
+
+        try:
+            count = self.history_service.get_lookup_count_since(user_id, since)
+            return Response({"count": count})
         except Exception as e:
             return Response(
                 {"error": f"Failed to get count: {str(e)}"},

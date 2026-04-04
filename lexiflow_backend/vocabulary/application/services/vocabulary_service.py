@@ -12,6 +12,7 @@ Clean Architecture principles:
 from typing import List, Optional
 from uuid import UUID
 from datetime import datetime
+from django.utils import timezone 
 
 from vocabulary.domain.entities import VocabularyEntry
 from vocabulary.domain.interfaces import VocabularyRepository
@@ -54,7 +55,7 @@ class VocabularyService:
             user_id=user_id,
             word_id=word_id,
             meaning=meaning,
-            saved_at=datetime.now(),
+            saved_at=timezone.now(),
             review_count=0,
             last_reviewed_at=None,
         )

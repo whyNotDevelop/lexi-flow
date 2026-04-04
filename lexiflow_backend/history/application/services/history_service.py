@@ -16,6 +16,7 @@ Clean Architecture principles:
 from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
+from django.utils import timezone 
 
 from history.domain.entities import LookupHistory
 from history.domain.interfaces import HistoryRepository
@@ -53,7 +54,7 @@ class HistoryService:
             id=None,  # Let repository assign ID
             user_id=user_id,
             word_id=word_id,
-            looked_up_at=datetime.now(),
+            looked_up_at=timezone.now(),
         )
         return self.history_repo.add(history)
 
