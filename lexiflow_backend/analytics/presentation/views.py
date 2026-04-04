@@ -33,7 +33,7 @@ class AnalyticsViewSet(viewsets.ViewSet):
             history_repo = HistoryRepositoryImpl()
 
             analytics_service = AnalyticsService(
-                reading_repo=reading_repo,
+                reading_session_repo=reading_repo,
                 history_repo=history_repo
             )
         self.analytics_service = analytics_service

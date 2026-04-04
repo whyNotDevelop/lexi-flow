@@ -12,110 +12,45 @@ Clean Architecture principles:
 """
 
 from datetime import datetime, timedelta
+from django.utils import timezone
 from typing import Dict, Any
 from uuid import UUID
 
-from django.utils import timezone
-
-from analytics.domain.interfaces import ReadingSessionRepository
-from history.domain.interfaces import HistoryRepository
-
-
 class AnalyticsService:
-    """
-    Aggregates and provides consolidated user analytics.
-
-    Dependencies:
-        - reading_session_repo: ReadingSessionRepository for session statistics.
-        - history_repo: HistoryRepository for lookup history stats.
-    """
-
-    def __init__(
-        self,
-        reading_session_repo: ReadingSessionRepository,
-        history_repo: HistoryRepository,
-    ):
-        """
-        Initialize the AnalyticsService.
-
-        Args:
-            reading_session_repo: Repository for reading session data.
-            history_repo: Repository for lookup history data.
-        """
+    def __init__(self, reading_session_repo, history_repo):
         self.reading_session_repo = reading_session_repo
         self.history_repo = history_repo
 
     def get_user_stats(self, user_id: UUID) -> Dict[str, Any]:
-        """
-        Get comprehensive analytics for a user.
-
-        Aggregates:
-        - Reading session stats (total sessions, duration, words looked up)
-        - Lookup history (total, today, last 7 days, last 30 days)
-
-        Args:
-            user_id: UUID of the user.
-
-        Returns:
-            Dictionary with comprehensive user analytics.
-        """
-        now = timezone.now()
-        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        week_start = today_start - timedelta(days=6)
-        month_start = today_start - timedelta(days=29)
-
-        # Get reading session statistics
-        reading_stats = self.reading_session_repo.get_stats(user_id)
-
-        # Get lookup history statistics
-        lookups_total = self.history_repo.count_by_user(user_id)
-        lookups_today = self.history_repo.count_by_user_since(user_id, today_start)
-        lookups_last_7_days = self.history_repo.count_by_user_since(user_id, week_start)
-        lookups_last_30_days = self.history_repo.count_by_user_since(user_id, month_start)
-
-        return {
-            **reading_stats,
-            "lookups_total": lookups_total,
-            "lookups_today": lookups_today,
-            "lookups_last_7_days": lookups_last_7_days,
-            "lookups_last_30_days": lookups_last_30_days,
-        }
+        # Reading stats
+        reading_stats = self.get_reading_session_stats(user_id)
+        # Lookup stats
+        lookup_stats = self.get_lookup_stats(user_id)
+        # Merge
+        return {**reading_stats, **lookup_stats}
 
     def get_reading_session_stats(self, user_id: UUID) -> Dict[str, Any]:
-        """
-        Get reading session statistics only.
-
-        Args:
-            user_id: UUID of the user.
-
-        Returns:
-            Dictionary with reading session analytics.
-        """
-        return self.reading_session_repo.get_stats(user_id)
+        sessions = self.reading_session_repo.get_by_user(user_id)
+        total_sessions = len(sessions)
+        total_reading_time = sum(s.duration_seconds for s in sessions)
+        total_words_looked_up = sum(s.words_looked_up for s in sessions)
+        avg_duration = total_reading_time / total_sessions if total_sessions > 0 else 0
+        return {
+            "total_sessions": total_sessions,
+            "active_sessions": sum(1 for s in sessions if s.ended_at is None),
+            "reading_time_seconds": total_reading_time,
+            "average_session_duration_seconds": avg_duration,
+            "total_words_looked_up": total_words_looked_up,
+        }
 
     def get_lookup_stats(self, user_id: UUID) -> Dict[str, int]:
-        """
-        Get lookup history statistics only.
-
-        Args:
-            user_id: UUID of the user.
-
-        Returns:
-            Dictionary with lookup analytics.
-        """
-        now = timezone.now()
-        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        week_start = today_start - timedelta(days=6)
-        month_start = today_start - timedelta(days=29)
-
-        lookups_total = self.history_repo.count_by_user(user_id)
-        lookups_today = self.history_repo.count_by_user_since(user_id, today_start)
-        lookups_last_7_days = self.history_repo.count_by_user_since(user_id, week_start)
-        lookups_last_30_days = self.history_repo.count_by_user_since(user_id, month_start)
-
+        total = self.history_repo.count_by_user(user_id)
+        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        week_start = today_start - timedelta(days=7)
+        month_start = today_start - timedelta(days=30)
         return {
-            "lookups_total": lookups_total,
-            "lookups_today": lookups_today,
-            "lookups_last_7_days": lookups_last_7_days,
-            "lookups_last_30_days": lookups_last_30_days,
+            "lookups_total": total,
+            "lookups_today": self.history_repo.count_by_user_since(user_id, today_start),
+            "lookups_last_7_days": self.history_repo.count_by_user_since(user_id, week_start),
+            "lookups_last_30_days": self.history_repo.count_by_user_since(user_id, month_start),
         }
