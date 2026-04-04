@@ -58,3 +58,9 @@ def mock_dictionary_response():
             response.json.side_effect = json.JSONDecodeError("msg", "doc", 0)
         return response
     return _make_response
+
+@pytest.fixture
+def api_client():
+    """Provide an unauthenticated API client."""
+    from rest_framework.test import APIClient
+    return APIClient()
