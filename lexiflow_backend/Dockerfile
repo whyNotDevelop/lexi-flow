@@ -18,6 +18,9 @@ COPY . .
 # Set the Django settings module to production
 ENV DJANGO_SETTINGS_MODULE=lexiflow_backend.settings.prod
 
+# Provide a dummy secret key for static collection (will be replaced at runtime)
+ENV DJANGO_SECRET_KEY=dummy-secret-key-for-collectstatic-only
+
 # Collect static files (requires the above env var)
 RUN python manage.py collectstatic --noinput
 
