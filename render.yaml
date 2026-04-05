@@ -7,7 +7,6 @@ services:
     plan: free
     dockerContext: ./lexiflow_backend
     dockerfilePath: ./lexiflow_backend/Dockerfile
-    preDeployCommand: "python manage.py migrate --noinput"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: lexiflow_backend.settings.prod
