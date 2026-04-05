@@ -1,4 +1,3 @@
-# users/migrations/0002_create_superuser_from_env.py
 import os
 from django.db import migrations
 from django.contrib.auth.hashers import make_password
