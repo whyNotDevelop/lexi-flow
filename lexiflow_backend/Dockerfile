@@ -25,4 +25,4 @@ ENV DJANGO_SECRET_KEY=dummy-secret-key-for-collectstatic-only
 RUN python manage.py collectstatic --noinput
 
 # Run gunicorn (development server is not used)
-CMD ["gunicorn", "lexiflow_backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--threads", "2"]
+CMD sh -c "python manage.py migrate --noinput && gunicorn lexiflow_backend.wsgi:application --bind 0.0.0.0:8000 --workers 3 --threads 2"
