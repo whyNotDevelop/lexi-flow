@@ -1,0 +1,30 @@
+# render.yaml
+services:
+  - type: web
+    name: lexiflow-backend
+    runtime: image
+    repo: https://github.com/whyNotDevelop/lexi-flow   
+    plan: free
+    dockerContext: ./lexiflow_backend
+    dockerfilePath: ./lexiflow_backend/Dockerfile
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: lexiflow_backend.settings.prod
+      - key: DJANGO_SECRET_KEY
+        sync: false   # means you'll set it manually in dashboard
+      - key: DJANGO_DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: .onrender.com,localhost
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://*.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lexiflow_db
+          property: connectionString
+
+databases:
+  - name: lexiflow_db
+    plan: free
+    databaseName: lexiflow
+    user: lexiflow_user
