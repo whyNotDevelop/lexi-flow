@@ -1,9 +1,3 @@
-
----
-
-## `DEPLOYMENT_CHECKLIST.md`
-
-```markdown
 # Deployment Checklist – LexiFlow Backend
 
 ## Prerequisites
@@ -11,7 +5,7 @@
 - GitHub repository with `main` branch
 - Dockerfile in `lexiflow_backend/`
 
-## One‑Time Setup
+## One-Time Setup
 
 ### 1. Create PostgreSQL database on Render
 - New → PostgreSQL → Free plan
@@ -41,18 +35,24 @@
 - Plan: Free
 - Click **Create Web Service**
 
+---
+
 ## Deployment Process
 
 - Push to `main` branch → Render automatically redeploys.
 - Build steps (Docker): installs dependencies, collects static files.
 - Startup command: runs migrations, creates superuser, starts gunicorn (as defined in Dockerfile CMD).
 
-## Post‑Deployment Verification
+---
+
+## Post-Deployment Verification
 
 - Visit `https://lexiflow-backend.onrender.com/admin/` – should load with CSS.
 - Log in with superuser credentials.
 - Test lookup endpoint: `https://lexiflow-backend.onrender.com/api/words/lookup/hello/`
 - Check logs in Render dashboard → Logs tab.
+
+---
 
 ## Troubleshooting
 
@@ -64,9 +64,13 @@
 | Migrations not applied | Startup command missing `migrate` | Verify Dockerfile `CMD` includes `python manage.py migrate --noinput` |
 | Superuser cannot log in | Environment variables not set or command not run | Check `DJANGO_SUPERUSER_*` vars; run `ensure_superuser` command manually via Render cron (if needed) |
 
+---
+
 ## Rollback
 
 - Render keeps previous deployments. Go to web service → **Deploy** tab → click **Rollback to previous deploy**.
+
+---
 
 ## Useful Commands (local)
 
@@ -79,3 +83,4 @@ docker run -p 8000:8000 --env-file .env.prod lexiflow-backend
 
 # Generate a secure secret key
 python -c "import secrets; print(secrets.token_urlsafe(50))"
+```
