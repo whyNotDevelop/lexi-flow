@@ -24,6 +24,7 @@
 | GET | `/api/words/lookup/{word}/` | Look up a word (cached, external API fallback) |
 
 ### Response (200)
+
 ```json
 {
   "id": "uuid",
@@ -42,18 +43,23 @@
   ],
   "is_saved": false
 }
+```
 
-### Vocabulary
+---
 
-| Method | Endpoint                              | Description                 |
-| ------ | ------------------------------------- | --------------------------- |
-| POST   | `/api/vocabulary/save/{word_id}/`     | Save word to vocabulary     |
-| DELETE | `/api/vocabulary/remove/{word_id}/`   | Remove word from vocabulary |
-| GET    | `/api/vocabulary/list/`               | List all saved words        |
-| GET    | `/api/vocabulary/search/?q={query}`   | Search saved words          |
-| GET    | `/api/vocabulary/is-saved/{word_id}/` | Check if word is saved      |
+## Vocabulary
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/vocabulary/save/{word_id}/` | Save word to vocabulary |
+| DELETE | `/api/vocabulary/remove/{word_id}/` | Remove word from vocabulary |
+| GET | `/api/vocabulary/list/` | List all saved words |
+| GET | `/api/vocabulary/search/?q={query}` | Search saved words |
+| GET | `/api/vocabulary/is-saved/{word_id}/` | Check if word is saved |
 
 ### Vocabulary Entry Response
+
+```json
 {
   "id": "uuid",
   "user_id": "uuid",
@@ -64,16 +70,22 @@
   "review_count": 0,
   "last_reviewed_at": null
 }
+```
 
-### History
-| Method | Endpoint                                     | Description                            |
-| ------ | -------------------------------------------- | -------------------------------------- |
-| GET    | `/api/history/list/`                         | Get lookup history (most recent first) |
-| DELETE | `/api/history/clear/`                        | Clear all history                      |
-| GET    | `/api/history/count/`                        | Total lookup count                     |
-| GET    | `/api/history/count-since/?since={ISO_DATE}` | Lookups since given date               |
+---
+
+## History
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/history/list/` | Get lookup history (most recent first) |
+| DELETE | `/api/history/clear/` | Clear all history |
+| GET | `/api/history/count/` | Total lookup count |
+| GET | `/api/history/count-since/?since={ISO_DATE}` | Lookups since given date |
 
 ### History List Response
+
+```json
 [
   {
     "id": "uuid",
@@ -82,15 +94,21 @@
     "looked_up_at": "2026-04-05T12:00:00Z"
   }
 ]
+```
 
-### Analytics
-| Method | Endpoint                           | Description                                            |
-| ------ | ---------------------------------- | ------------------------------------------------------ |
-| GET    | `/api/analytics/stats/`            | Comprehensive user stats                               |
-| GET    | `/api/analytics/reading-sessions/` | Reading session stats                                  |
-| GET    | `/api/analytics/lookups/`          | Lookup stats (today, last 7 days, last 30 days, total) |
+---
+
+## Analytics
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/analytics/stats/` | Comprehensive user stats |
+| GET | `/api/analytics/reading-sessions/` | Reading session stats |
+| GET | `/api/analytics/lookups/` | Lookup stats (today, last 7 days, last 30 days, total) |
 
 ### Stats Response Example
+
+```json
 {
   "total_sessions": 5,
   "active_sessions": 1,
@@ -102,15 +120,19 @@
   "lookups_last_7_days": 45,
   "lookups_last_30_days": 100
 }
+```
 
-### Status Codes
-| Code                      | Meaning                                    |
-| ------------------------- | ------------------------------------------ |
-| 200 OK                    | Successful request                         |
-| 201 Created               | Resource created                           |
-| 204 No Content            | Deletion successful                        |
-| 400 Bad Request           | Invalid input                              |
-| 401 Unauthorized          | Missing or invalid token                   |
-| 404 Not Found             | Resource not found                         |
-| 409 Conflict              | Duplicate entry (e.g., word already saved) |
-| 500 Internal Server Error | Server error                               |
+---
+
+## Status Codes
+
+| Code | Meaning |
+|------|--------|
+| 200 OK | Successful request |
+| 201 Created | Resource created |
+| 204 No Content | Deletion successful |
+| 400 Bad Request | Invalid input |
+| 401 Unauthorized | Missing or invalid token |
+| 404 Not Found | Resource not found |
+| 409 Conflict | Duplicate entry (e.g., word already saved) |
+| 500 Internal Server Error | Server error |
