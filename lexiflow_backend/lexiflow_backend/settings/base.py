@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #third-party apps
     'rest_framework',
     'corsheaders',
+    'drf_spectacular', 
     'users',
     'words',
     'vocabulary',
@@ -122,7 +123,15 @@ AUTH_USER_MODEL = 'users.UserModel'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', 
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'LexiFlow API',
+    'DESCRIPTION': 'Reading assistant backend',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 # Internationalization
