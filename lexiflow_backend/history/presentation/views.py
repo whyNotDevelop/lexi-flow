@@ -11,6 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import is_aware, make_aware
 from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.types import OpenApiTypes
 
 from history.application.services.history_service import HistoryService
 from history.presentation.serializers import LookupHistorySerializer
@@ -35,10 +37,19 @@ class HistoryViewSet(viewsets.ViewSet):
         self.history_service = history_service
 
     @extend_schema(
-        summary="Get lookup history",
-        description="Get user's word lookup history with pagination.",
-        responses={200: LookupHistorySerializer(many=True)}
-    )
+    summary="Get lookup count since date",
+    description="Get number of lookups since a specific date.",
+    parameters=[
+        OpenApiParameter(
+            name='since',
+            type=OpenApiTypes.DATETIME,
+            location=OpenApiParameter.QUERY,
+            description='ISO 8601 datetime (e.g., 2024-01-01T00:00:00Z)',
+            required=True,
+        )
+    ],
+    responses={200: {"type": "object", "properties": {"count": {"type": "integer"}}}}
+)
     @action(detail=False, methods=['get'], url_path='list')
     def get_history(self, request):
         """
