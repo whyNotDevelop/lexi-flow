@@ -26,7 +26,7 @@ urlpatterns = [
         path('vocabulary/', include('vocabulary.presentation.urls')),
         path('history/', include('history.presentation.urls')),
         path('analytics/', include('analytics.presentation.urls')),
-        path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-        path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+        path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     ])),
 ]
