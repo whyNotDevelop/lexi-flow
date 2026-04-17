@@ -94,19 +94,38 @@ export function AppNavigator() {
   const isDarkMode = usePreferencesStore((state) => state.is_dark_mode)
 
   return (
-    <NavigationContainer
-      theme={{
-        dark: isDarkMode,
-        colors: {
-          primary: '#0d9488',
-          background: isDarkMode ? '#1a1918' : '#faf9f7',
-          card: isDarkMode ? '#262524' : '#ffffff',
-          text: isDarkMode ? '#f5f4f2' : '#1a1918',
-          border: isDarkMode ? '#3d3b38' : '#e0ded9',
-          notification: '#0d9488',
-        },
-      }}
-    >
+    // Inside AppNavigator, replace the theme object:
+<NavigationContainer
+  theme={{
+    dark: isDarkMode,
+    colors: {
+      primary: '#0d9488',
+      background: isDarkMode ? '#1a1918' : '#faf9f7',
+      card: isDarkMode ? '#262524' : '#ffffff',
+      text: isDarkMode ? '#f5f4f2' : '#1a1918',
+      border: isDarkMode ? '#3d3b38' : '#e0ded9',
+      notification: '#0d9488',
+    },
+    fonts: {
+      regular: {
+        fontFamily: 'System',
+        fontWeight: 'bold'
+      },
+      medium: {
+        fontFamily: 'System',
+        fontWeight: 'bold'
+      },
+      bold: {
+        fontFamily: 'System',
+        fontWeight: 'bold'
+      },
+      heavy: {
+        fontFamily: 'System',
+        fontWeight: 'bold'
+      },
+    },
+  }}
+>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {!isAuthenticated ? (
           <Stack.Screen

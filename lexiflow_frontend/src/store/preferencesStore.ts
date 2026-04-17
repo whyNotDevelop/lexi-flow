@@ -7,7 +7,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { auth } from '@/api/compat'
-import type { UserPreferences, FontSizeEnum } from 'lexiflow-api-client'
+import type { UserPreferences, FontSizeEnum } from '../api'
 
 interface PreferencesState {
   // State from API

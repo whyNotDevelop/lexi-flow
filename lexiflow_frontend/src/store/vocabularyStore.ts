@@ -5,7 +5,7 @@
 
 import { create } from 'zustand'
 import { vocabulary } from '@/api/compat'
-import type { VocabularyEntry } from 'lexiflow-api-client'
+import type { VocabularyEntry } from '../api'
 
 interface VocabularyState {
   // State

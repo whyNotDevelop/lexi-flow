@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useVocabulary } from '@/hooks/useVocabulary'
 import { usePreferencesStore } from '@/store/preferencesStore'
 import { formatShortDate } from '@/utils/dateFormatting'
-import type { VocabularyEntry } from 'lexiflow-api-client'
+import type { VocabularyEntry } from '../api'
 import { SearchIcon, TrashIcon, BookmarkFilledIcon } from '@/components/icons'
 
 export default function VocabularyScreen() {

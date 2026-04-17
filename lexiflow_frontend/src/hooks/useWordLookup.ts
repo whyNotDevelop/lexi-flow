@@ -6,7 +6,7 @@
 import { useState, useCallback } from 'react'
 import useSWR from 'swr'
 import { words, vocabulary } from '@/api/compat'
-import type { Word } from 'lexiflow-api-client'
+import type { Word } from '../api'
 
 interface WordWithSavedStatus extends Word {
   is_saved?: boolean
@@ -20,13 +20,13 @@ interface WordWithSavedStatus extends Word {
  */
 export function useWordLookup(word: string | null) {
   const [isSaving, setIsSaving] = useState(false)
+  const key = word ? `/api/words/lookup/${word.toLowerCase()}` : null
 
   // Fetch word definition with SWR
-  const { data, error, isLoading, mutate } = useSWR<WordWithSavedStatus>(
-    word ? `/api/words/lookup/${word.toLowerCase()}` : null,
-    async () => {
-      if (!word) return null
-      const wordData = await words.lookup(word)
+  const { data, error, isLoading, mutate } = useSWR<WordWithSavedStatus | null>(
+    key,
+    async (_key: string | null) => {
+      const wordData = await words.lookup(word!)
 
       // Check if word is saved in vocabulary
       let is_saved = false

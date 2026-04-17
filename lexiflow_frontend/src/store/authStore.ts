@@ -8,7 +8,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { auth, tokenStorage } from '@/api/compat'
-import type { User, UserRegistration } from 'lexiflow-api-client'
+import type { User, UserRegistration } from '../api'
 
 // API base URL for token endpoints
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://api.lexiflow.app'

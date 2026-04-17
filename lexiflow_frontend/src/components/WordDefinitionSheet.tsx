@@ -97,6 +97,14 @@ export const WordDefinitionSheet = forwardRef<WordDefinitionSheetRef, WordDefini
     const borderColor = isDarkMode ? '#3d3b38' : '#e0ded9'
     const cardBg = isDarkMode ? '#2e2d2b' : '#f0eeeb'
 
+    // Aggregate synonyms from all returned definitions
+    const synonyms = useMemo(() => {
+      if (!definition?.definitions?.length) return []
+      return Array.from(
+        new Set(definition.definitions.flatMap((def) => def.synonyms ?? []))
+      )
+    }, [definition])
+
     // Check if word is already saved (using word_id from definition)
     const wordIsSaved = definition?.id ? isWordSaved(definition.id) || isSaved : false
 
@@ -227,7 +235,7 @@ export const WordDefinitionSheet = forwardRef<WordDefinitionSheetRef, WordDefini
               ))}
 
               {/* Synonyms */}
-              {definition.definitions[0]?.synonyms?.length > 0 && (
+              {synonyms.length > 0 && (
                 <View
                   className="rounded-xl p-4 mt-2"
                   style={{ borderColor, borderWidth: 1 }}
@@ -239,7 +247,7 @@ export const WordDefinitionSheet = forwardRef<WordDefinitionSheetRef, WordDefini
                     Synonyms
                   </Text>
                   <View className="flex-row flex-wrap gap-2">
-                    {definition.definitions[0].synonyms.map((syn, idx) => (
+                    {synonyms.map((syn, idx) => (
                       <View
                         key={idx}
                         className="px-3 py-1.5 rounded-full"

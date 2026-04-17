@@ -48,7 +48,7 @@ export default function HistoryScreen() {
     async (item: HistoryItem) => {
       setSavingIds((prev) => new Set(prev).add(item.id))
       try {
-        await saveWord(item.word_id, item.word, '')
+        await saveWord(item.word_id);
         markAsSaved(item.id)
       } catch {
         // Error handled by hook

@@ -145,18 +145,8 @@ export interface ApiResponse<T> {
   meta?: Record<string, unknown>
 }
 
-// ----- Navigation Types -----
-export type RootStackParamList = {
-  Login: undefined
-  Main: undefined
-}
+// ----- Navigation 
 
-export type MainTabParamList = {
-  Reading: undefined
-  Vocabulary: undefined
-  History: undefined
-  Settings: undefined
-}
 
 export type Screen = 'login' | 'reading' | 'vocabulary' | 'history' | 'settings'
 
@@ -167,3 +157,35 @@ export interface Pagination {
   limit: number
   total_pages: number
 }
+
+// src/types/index.ts
+export interface HistoryItem {
+  id: string;
+  word_id: string;
+  word: string;
+  looked_up_at: string;
+  is_saved: boolean;
+}
+
+export interface VocabularyEntry {
+  id: string;
+  user_id: string;
+  word_id: string;
+  word_text: string;
+  meaning: string;
+  saved_at: string;
+  review_count: number;
+  last_reviewed_at: string;
+}
+
+export type RootStackParamList = {
+  Login: undefined;
+  Main: undefined;
+};
+
+export type MainTabParamList = {
+  Reading: undefined;
+  Vocabulary: undefined;
+  History: undefined;
+  Settings: undefined;
+};

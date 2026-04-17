@@ -5,7 +5,7 @@
 
 import { useCallback, useEffect } from 'react'
 import { useAuthStore } from '@/store/authStore'
-import type { UserRegistration } from 'lexiflow-api-client'
+import type { UserRegistration } from '../api'
 
 interface LoginCredentials {
   email: string
